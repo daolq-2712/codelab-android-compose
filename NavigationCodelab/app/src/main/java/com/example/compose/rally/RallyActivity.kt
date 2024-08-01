@@ -29,6 +29,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
+import com.example.compose.rally.navigation.RallyNavHost
 import com.example.compose.rally.navigation.navigateSingleTopTo
 import com.example.compose.rally.navigation.navigateToSingleAccount
 import com.example.compose.rally.ui.accounts.AccountsScreen
@@ -75,43 +76,7 @@ fun RallyApp() {
                 )
             }
         ) { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = Overview.route,
-                Modifier.padding(innerPadding)
-            ) {
-                composable(route = Overview.route) {
-                    OverviewScreen(onClickSeeAllAccounts = {
-                        navController.navigateSingleTopTo(
-                            Accounts.route
-                        )
-                    }, onClickSeeAllBills = {
-                        navController.navigateSingleTopTo(Bills.route)
-                    }, onAccountClick = { accountType ->
-                        navController.navigateToSingleAccount(accountType)
-                    })
-                }
-                composable(route = Accounts.route) {
-                    AccountsScreen(onAccountClick = { accountType ->
-                        navController.navigateToSingleAccount(accountType)
-                    })
-                }
-                composable(route = Bills.route) {
-                    BillsScreen()
-                }
-                composable(
-                    route = SingleAccount.routeWithArgs,
-                    arguments = SingleAccount.arguments,
-                    deepLinks = SingleAccount.deepLinks
-                )
-                { navBackStackEntry ->
-                    // Retrieve the passed argument
-                    val accountType =
-                        navBackStackEntry.arguments?.getString(SingleAccount.accountTypeArg)
-                    // Pass accountType to SingleAccountScreen
-                    SingleAccountScreen(accountType)
-                }
-            }
+            RallyNavHost(navController = navController, Modifier.padding(innerPadding))
         }
     }
 }
